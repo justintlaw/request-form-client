@@ -1,0 +1,27 @@
+.container {
+  margin: 2rem 0
+}
+
+.form-input {
+  width: '100%';
+  max-width: 600;
+}
+
+.spinner {
+  animation: spin 1s infinite linear
+}
+
+/* TODO: Find a better way to override the Amplify components css*/
+.auth-container {
+  display: flex !important;
+  justify-content: center !important;
+  margin-top: 2rem !important;
+}
+
+@keyframes spinner {
+  from {
+    transform: scale(1) rotate(0deg);
+  } to {
+    transform: scale(1) rotate(360deg);
+  }
+}
