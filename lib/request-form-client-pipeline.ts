@@ -25,7 +25,7 @@ export class RequestFormClientPipelineStack extends Stack {
           phases: {
             build: {
               'runtime-versions': {
-                nodejs: '16'
+                nodejs: '14'
               }
             }
           }
