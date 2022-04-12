@@ -39,11 +39,19 @@ export default function RequestForm({
    * elsewhere in the code.
    */
   const getHeaders = async() => {
-    const session = await Auth.currentSession()
-    return {
-      'Content-type': 'application/json',
-      'Authorization': session.getIdToken().getJwtToken()
-    }    
+    let headers = {
+      'Content-type': 'application/json'
+    }
+
+    if (isEditForm) {
+      const session = await Auth.currentSession()
+      headers = {
+        ...headers,
+        'Authorization': session.getIdToken().getJwtToken()
+      }
+    }
+
+    return headers 
   }
 
   const [loading, setLoading] = useState(false)
