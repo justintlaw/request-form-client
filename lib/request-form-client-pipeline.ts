@@ -1,4 +1,4 @@
-import { pipelines, Stack, StackProps } from 'aws-cdk-lib'
+import { aws_codebuild, pipelines, Stack, StackProps } from 'aws-cdk-lib'
 import { Construct } from 'constructs'
 import { RequestFormClientPipelineStage } from './request-form-client-pipeline-stage'
 
@@ -19,7 +19,18 @@ export class RequestFormClientPipelineStack extends Stack {
           'npm run build',
           'npx cdk synth'
         ]
-      })
+      }),
+      synthCodeBuildDefaults: {
+        partialBuildSpec: aws_codebuild.BuildSpec.fromObject({
+          phases: {
+            build: {
+              'runtime-versions': {
+                nodejs: '16'
+              }
+            }
+          }
+        })
+      }
     })
 
     const devStage = pipeline.addStage(new RequestFormClientPipelineStage(this, 'dev', {
