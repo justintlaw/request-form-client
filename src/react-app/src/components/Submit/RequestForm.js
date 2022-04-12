@@ -21,6 +21,7 @@ import { API_BASE_URL } from '../../constants'
 export default function RequestForm({
   isEditForm = false,
   setEditing = undefined,
+  setRequests = undefined,
   currentData
 }) {
   const { register, handleSubmit, control, watch, reset, formState: { errors } } = useForm({
@@ -53,10 +54,16 @@ export default function RequestForm({
     setTimeout(() => setToast(false), 5000)
   }
 
-  const handleSuccess = () => {
+  const handleSuccess = (data) => {
     reset()
     setLoading(false)
     setRequestStatus(true)
+    setRequests(prevRequests => {
+      const updateIndex = prevRequests.findIndex(req => req.id === currentData.id)
+      const tempRequests = [...prevRequests]
+      tempRequests.splice(updateIndex, 1, data)
+      return tempRequests
+    })
     setToast(true)
     setTimeout(() => setToast(false), 5000)
   }
@@ -76,8 +83,10 @@ export default function RequestForm({
       if (res.status >= 300) {
         handleFailure()
       } else {
-        handleSuccess()
+        res.json().then(data => { handleSuccess(data) })
       }
+
+      setEditing(false)
     })
     .catch(() => {
       handleFailure()

@@ -9,7 +9,8 @@ export default function Submit({
   requestId = undefined,
   currentData = undefined,
   isEditForm = false,
-  setEditing  = undefined
+  setEditing = undefined,
+  setRequests = undefined
 }) {
   return (
     <Card>
@@ -28,6 +29,7 @@ export default function Submit({
           currentData={currentData}
           isEditForm={isEditForm}
           setEditing={setEditing}
+          setRequests={setRequests}
           requestId={requestId}
         />
       </CardContent>

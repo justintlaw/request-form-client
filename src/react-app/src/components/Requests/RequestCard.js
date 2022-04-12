@@ -12,7 +12,7 @@ import IconButton from '@mui/material/IconButton';
 
 import Submit from '../../pages/Submit';
 
-export default function RequestCard({ request, index, onSubmit }) {
+export default function RequestCard({ request, index, onSubmit, setRequests }) {
   const [completeLoading, setCompleteLoading] = useState(false)
   const [canceledLoading, setCanceledLoading] = useState(false)
   const [isEditing, setEditing] = useState(false)
@@ -64,7 +64,7 @@ export default function RequestCard({ request, index, onSubmit }) {
       </Collapse>    
 
       <Collapse in={isEditing}>
-        <Submit currentData={request} isEditForm={true} setEditing={setEditing} />
+        <Submit currentData={request} isEditForm={true} setEditing={setEditing} setRequests={setRequests} />
       </Collapse>
     </Box>
   )
