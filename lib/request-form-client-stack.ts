@@ -30,7 +30,7 @@ export class RequestFormClientStack extends Stack {
       errorResponses: [{
         httpStatus: 404,
         responseHttpStatus: 200,
-        responsePagePath: 'index.html'
+        responsePagePath: '/index.html'
       }]
     })
 
