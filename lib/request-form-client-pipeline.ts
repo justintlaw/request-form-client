@@ -19,18 +19,7 @@ export class RequestFormClientPipelineStack extends Stack {
           'npm run build',
           'npx cdk synth'
         ]
-      }),
-      synthCodeBuildDefaults: {
-        partialBuildSpec: aws_codebuild.BuildSpec.fromObject({
-          phases: {
-            build: {
-              'runtime-versions': {
-                nodejs: '14'
-              }
-            }
-          }
-        })
-      }
+      })
     })
 
     const devStage = pipeline.addStage(new RequestFormClientPipelineStage(this, 'dev', {
