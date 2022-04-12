@@ -37,8 +37,9 @@ export default function Requests() {
       headers
     }
 
-    const res = await fetch(`${API_BASE_URL}/requests`, options)
+    const res = await fetch(`${API_BASE_URL}/requests?pending=true`, options)
     const data = await res.json()
+    console.log('requests are', data)
     setRequests(data)
   }
 
@@ -87,6 +88,8 @@ export default function Requests() {
       />
     ))
   }
+
+  console.log('request content is', requestsContent)
 
   return (
     <Box>

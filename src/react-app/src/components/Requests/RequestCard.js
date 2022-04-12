@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
@@ -12,25 +13,26 @@ import IconButton from '@mui/material/IconButton';
 import Submit from '../../pages/Submit';
 
 export default function RequestCard({ request, index, onSubmit }) {
-  const [isLoading, setLoading] = useState(false)
+  const [completeLoading, setCompleteLoading] = useState(false)
+  const [canceledLoading, setCanceledLoading] = useState(false)
   const [isEditing, setEditing] = useState(false)
 
   const markComplete = async () => {
-    setLoading(true)
+    setCompleteLoading(true)
     await onSubmit({
       id: request.id,
       status: 'completed'
     })
-    setLoading(false)
+    setCompleteLoading(false)
   }
 
   const markCanceled = async () => {
-    setLoading(true)
+    setCanceledLoading(true)
     await onSubmit({
       id: request.id,
       status: 'canceled'
     })
-    setLoading(false)
+    setCanceledLoading(false)
   }
 
   const enterEditMode = () => {
@@ -44,7 +46,7 @@ export default function RequestCard({ request, index, onSubmit }) {
           <CardContent sx={{ display: 'block' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Typography variant="h5" color="text.primary">{request.address}</Typography>
-              <IconButton aria-label="edit" color="secondary" onClick={enterEditMode}>
+              <IconButton aria-label="edit" color="secondary" onClick={enterEditMode} disabled={completeLoading || canceledLoading}>
                 <EditIcon />
               </IconButton>
             </Box>
@@ -55,8 +57,8 @@ export default function RequestCard({ request, index, onSubmit }) {
           </CardContent>
 
           <CardActions>
-            <Button loading={isLoading} color="success" onClick={markComplete}>Mark Complete</Button>
-            <Button loading={isLoading} color="error" onClick={markCanceled}>Cancel Request</Button>
+            <LoadingButton loading={completeLoading} disabled={canceledLoading} color="success" onClick={markComplete}>Mark Complete</LoadingButton>
+            <LoadingButton loading={canceledLoading} disabled={completeLoading} color="error" onClick={markCanceled}>Cancel Request</LoadingButton>
           </CardActions>
         </Card>
       </Collapse>    

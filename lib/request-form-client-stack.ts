@@ -25,7 +25,13 @@ export class RequestFormClientStack extends Stack {
         origin: new aws_cloudfront_origins.S3Origin(websiteBucket),
         allowedMethods: aws_cloudfront.AllowedMethods.ALLOW_GET_HEAD,
         viewerProtocolPolicy: aws_cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS
-      }
+      },
+      // prevent 404 errors on page refresh
+      errorResponses: [{
+        httpStatus: 404,
+        responseHttpStatus: 200,
+        responsePagePath: 'index.html'
+      }]
     })
 
     // deploy bucket
