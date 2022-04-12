@@ -30,7 +30,7 @@ export class RequestFormClientStack extends Stack {
 
     // deploy bucket
     new aws_s3_deployment.BucketDeployment(this, 'DeployWebsite', {
-      sources: [aws_s3_deployment.Source.asset(path.join(__dirname, '../src/react-app/dist'))], // TODO: confirm this
+      sources: [aws_s3_deployment.Source.asset(path.join(__dirname, '../src/react-app/build'))],
       destinationBucket: websiteBucket,
       distribution
     })
