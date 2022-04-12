@@ -10,10 +10,10 @@ import { useForm, Controller } from 'react-hook-form'
 import FormInputText from './Wrappers/FormInputText'
 import FormAreaText from './Wrappers/FormAreaText'
 import DismissableAlert from './DimissableAlert'
-
 import ConstructionIcon from '@mui/icons-material/Construction'
 import Button from '@mui/material/Button'
 import LoadingButton from '@mui/lab/LoadingButton'
+import { Auth } from 'aws-amplify'
 
 import '../../Default.css'
 import { API_BASE_URL } from '../../constants'
@@ -33,6 +33,18 @@ export default function RequestForm({
       issue: currentData?.issue ?? ''
     }
   })
+
+  /** TODO
+   * This function is being reused, it should be defined once
+   * elsewhere in the code.
+   */
+  const getHeaders = async() => {
+    const session = await Auth.currentSession()
+    return {
+      'Content-type': 'application/json',
+      'Authorization': session.getIdToken().getJwtToken()
+    }    
+  }
 
   const [loading, setLoading] = useState(false)
   const [toastIsOpen, setToast] = useState(false)
@@ -68,28 +80,34 @@ export default function RequestForm({
     setTimeout(() => setToast(false), 5000)
   }
 
+  /** TODO
+   * Refactor with async/await
+   */
   const onSubmit = (data) => {
     setLoading(true)
 
     const url = isEditForm ? `${API_BASE_URL}/requests/${currentData.id}` : `${API_BASE_URL}/requests`
 
-    fetch(url, {
-      method: 'POST',
-      headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify(data)
-    })
-    .then(res => {
-      // TODO: One function for repeated actions
-      if (res.status >= 300) {
-        handleFailure()
-      } else {
-        res.json().then(data => { handleSuccess(data) })
-      }
 
-      setEditing(false)
-    })
-    .catch(() => {
-      handleFailure()
+    getHeaders().then(headers => {
+      fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(data)
+      })
+      .then(res => {
+        // TODO: One function for repeated actions
+        if (res.status >= 300) {
+          handleFailure()
+        } else {
+          res.json().then(data => { handleSuccess(data) })
+        }
+  
+        setEditing(false)
+      })
+      .catch(() => {
+        handleFailure()
+      })
     })
   }
 

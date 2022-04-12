@@ -1,26 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { useAuthenticator } from '@aws-amplify/ui-react'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card'
-import CardActions from '@mui/material/CardActions'
-import CardContent from '@mui/material/CardContent'
 import Divider from '@mui/material/Divider'
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 
 import Account from '../components/Account/Account'
 import RequestCard from '../components/Requests/RequestCard'
+import SkeletonRequestCard from '../components/Requests/SkeletonRequestCard'
 import { API_BASE_URL } from '../constants'
 import { Auth } from 'aws-amplify'
 
 export default function Requests() {
   const { user } = useAuthenticator((context) => [context.user])
   const [requests, setRequests] = useState([])
+  const [pageLoading, setPageLoading] = useState(false)
 
   const getHeaders = async() => {
     const session = await Auth.currentSession()
@@ -31,6 +24,7 @@ export default function Requests() {
   }
 
   const getMaintenanceRequests = async () => {
+    setPageLoading(true)
     const headers = await getHeaders()
     const options = {
       method: 'GET',
@@ -40,6 +34,7 @@ export default function Requests() {
     const res = await fetch(`${API_BASE_URL}/requests?pending=true`, options)
     const data = await res.json()
     setRequests(data)
+    setPageLoading(false)
   }
 
   // TODO: Rename function or refactor
@@ -100,14 +95,16 @@ export default function Requests() {
         <Typography variant="h4" color="text.primary">Requests</Typography>
         <Divider></Divider>
         <Box sx={{ marginTop: '1rem' }}>
-        {!!requestsContent && requestsContent}
-        {/* TODO: DynamoDB should query only pending to begin with, using status as the sort key */}
-        {/* {!!requestsContent && requests.filter(req => req.status === 'pending').length < 1 &&
-          <Typography variant="body1" color="text.primary">There are no active requests at this time.</Typography>
-        } */}
-        {!requestsContent &&
+        {pageLoading &&
+          <Box>
+            <SkeletonRequestCard />
+            <SkeletonRequestCard />
+          </Box>
+        }
+        {!pageLoading && !requestsContent &&
           <Typography variant="body1" color="text.primary">There are no active requests at this time.</Typography>
         }
+        {!pageLoading && !!requestsContent && requestsContent}
         </Box>
       </Box>
       }
