@@ -70,19 +70,23 @@ export default function Requests() {
     }
   }, [user])
 
-  const requestsContent = requests.map((request, index) => (
-    /**
-     * Only display 'pending' cards.
-     * TODO: Enable viewing of other cards.
-     */
-    request.status === 'pending' &&
-    <RequestCard
-      key={request.id}
-      request={request}
-      index={index}
-      onSubmit={handleSubmit}
-    />
-  ))
+  let requestsContent = null
+  
+  if (requests.length > 0) {
+    requestsContent = requests?.map((request, index) => (
+      /**
+       * Only display 'pending' cards.
+       * TODO: Enable viewing of other cards.
+       */
+      request.status === 'pending' &&
+      <RequestCard
+        key={request.id}
+        request={request}
+        index={index}
+        onSubmit={handleSubmit}
+      />
+    ))
+  }
 
   return (
     <Box>
@@ -95,9 +99,12 @@ export default function Requests() {
         <Typography variant="h4" color="text.primary">Requests</Typography>
         <Divider></Divider>
         <Box sx={{ marginTop: '1rem' }}>
-        {requestsContent}
+        {!!requestsContent && requestsContent}
         {/* TODO: DynamoDB should query only pending to begin with, using status as the sort key */}
-        {requests.filter(req => req.status === 'pending').length < 1 &&
+        {/* {!!requestsContent && requests.filter(req => req.status === 'pending').length < 1 &&
+          <Typography variant="body1" color="text.primary">There are no active requests at this time.</Typography>
+        } */}
+        {!requestsContent &&
           <Typography variant="body1" color="text.primary">There are no active requests at this time.</Typography>
         }
         </Box>
