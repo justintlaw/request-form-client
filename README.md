@@ -1,10 +1,14 @@
-# Welcome to your CDK TypeScript project
+# Request Form Client
+The front end code for the request form app.
+
+## Description
+This repo has two parts. First, the infrastructure as code which was written using the AWS CDK. You can see that code under the lib folder. In there a fully functioning code pipeline has been written, which includes a deployment step that uploads the React app to s3 and fronts it with a cloudfront distribution. The React app is located in the `src/react-app` directory.
 
 This is a blank project for TypeScript development with CDK.
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
-## Useful commands
+## AWS cdk commands
 
 * `npm run build`   compile typescript to js
 * `npm run watch`   watch for changes and compile
